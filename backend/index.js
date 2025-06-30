@@ -60,7 +60,20 @@ let comments = [
 
 // Get all articles
 app.get('/api/article', (req, res) => {
-    res.json(articles);
+    const { search } = req.query;
+    
+    if (search) {
+        // Filter articles based on search term (case-insensitive)
+        const filteredArticles = articles.filter(article => 
+            article.title.toLowerCase().includes(search.toLowerCase()) ||
+            article.excerpt.toLowerCase().includes(search.toLowerCase()) ||
+            article.content.toLowerCase().includes(search.toLowerCase())
+        );
+        res.json(filteredArticles);
+    } else {
+        // Return all articles if no search term
+        res.json(articles);
+    }
 });
 
 // Get single article by slug
