@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import botRoutes from './routes/bot.js';
 
 dotenv.config();
 
@@ -57,6 +58,19 @@ let comments = [
         createdAt: new Date().toISOString()
     }
 ];
+
+// Function to add article to storage
+const addArticle = (article) => {
+    articles.unshift(article); // Add to beginning of array
+    return article;
+};
+
+// Make articles array accessible to bot routes
+app.locals.articles = articles;
+app.locals.addArticle = addArticle;
+
+// Register bot routes
+app.use('/api/bot', botRoutes);
 
 // Get all articles
 app.get('/api/article', (req, res) => {
